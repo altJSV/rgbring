@@ -93,6 +93,10 @@ void setup()
   Serial.println(WiFi.localIP());
 
   server.on("/",handle_main);
+  server.on("/onoff",handle_onoff);
+  server.on("/change_effect",handle_effect_change);
+  server.on("/change_brightness",handle_change_brightness);
+  server.on("/change_color",handle_change_brightness);
 
   ElegantOTA.begin(&server);    // Стартуем AsyncElegantOTA
   server.begin();

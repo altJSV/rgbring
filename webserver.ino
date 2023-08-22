@@ -20,6 +20,33 @@ void handle_main()
   page+=".slider::-moz-range-thumb {width: 25px; height: 25px; background: Dodgerblue; cursor: pointer;}";  
   page+=".icon{fill: #000000;}";
   page+="</style>";
+  page+="<script type='text/javascript'>";
+  page+="function change_effect(){";
+  page+="const select = document.getElementById('efnum');";
+  page+="var valeffect=select.value;";
+  page+="var server = '/change_effect?val='+valeffect;";
+  page+="request = new XMLHttpRequest();";
+  page+="request.open('GET',server, true);";
+  page+="request.send();}";
+  page+="function change_brightness(){";
+  page+="const bright = document.getElementById('bright');";
+  page+="var valbright=bright.value;";
+  page+="var server = '/change_brightness?val='+valbright;";
+  page+="request = new XMLHttpRequest();";
+  page+="request.open('GET',server, true);";
+  page+="request.send();}";  
+  page+="function change_color(){";
+  page+="const redc = document.getElementById('redsl');";
+  page+="const greenc = document.getElementById('greensl');";
+  page+="const bluec = document.getElementById('bluesl');";
+  page+="var valred=redc.value;";
+  page+="var valgreen=greenc.value;";
+  page+="var valblue=bluec.value;";
+  page+="var server = '/change_color?red='+valred+'&green='+valgreen+'&blue='+valblue;";
+  page+="request = new XMLHttpRequest();";
+  page+="request.open('GET',server, true);";
+  page+="request.send();}";  
+  page+="</script>";
   page+="</head>";
   page+="<body>";
   page+="<h1 align='center'>Панель управления RGB кольцом</h1>";
@@ -27,7 +54,7 @@ void handle_main()
   page+="<h2>Выбор эффекта</h2>";
   page+="<div class='main'>";
   page+="<p>Выберите эффект подсветки из выпадающего списка</p>";
-  page+="<select  class= 'select-css' name='efnum' id='efnum' width='80%' align='center'>";
+  page+="<select  class= 'select-css' name='efnum' id='efnum' width='80%' align='center' onchange='change_effect()'>";
   page+="<option value='1'>Выбор одного цвета</option>";
   page+="<option value='2'>Плавная смена цветов всей ленты</option>";
   page+="<option value='3'>Крутящаяся радуга</option>";
@@ -64,8 +91,21 @@ void handle_main()
   page+="<h2>Настройка яркости</h2>";
   page+="<div class='main'>";
   page+="<p>Установите с помощью слайдера яркость светодиодов</p>";
-  page+="<input id='bright' type='range' class='slider' min='0' max='255' step='1' width='100%' align='center' value='"+String(led_bright)+"'>";
+  page+="<input id='bright' type='range' class='slider' min='0' max='255' step='1' width='100%' align='center' value='"+String(led_bright)+"'  onchange='change_brightness()'>";
   page+="</div></div>";
+  /* пока данный код глючит. Оставим до будущих релизов
+  page+="<div class='headerblock'>";
+  page+="<h2>Настройка цветовой палитры для режима одного цвета</h2>";
+  page+="<div class='main'>";
+  page+="<p>Для режима одного цвета установите значение каждого из цветов</p>";
+  page+="<p><font color='red'>Интенсивность красного цвета</font>";
+  page+="<input id='redsl' type='range' class='slider' min='0' max='255' step='1' width='100%' align='center' value='"+String(red_color)+"' onchange='change_color()'></p>";
+  page+="<p><font color='green'>Интенсивность зеленого цвета</font>";
+  page+="<input id='greensl' type='range' class='slider' min='0' max='255' step='1' width='100%' align='center' value='"+String(green_color)+"' onchange='change_color()'></p>";
+  page+="<p><font color='blue'>Интенсивность синего цвета</font>";
+  page+="<input id='bluesl' type='range' class='slider' min='0' max='255' step='1' width='100%' align='center' value='"+String(blue_color)+"' onchange='change_color()'></p>";
+  page+="</div></div>";
+  */
   page+="<div class='icon-block'><a href='/update'><svg class='icon' width='50' height='50' fill='none' xmlns='http://www.w3.org/2000/svg'>";
   page+="<g id='SVGRepo_bgCarrier' stroke-width='0'></g><g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></g><g id='SVGRepo_iconCarrier'><path id='primary' d='M6,5H16a2,2,0,0,1,2,2v7' style='fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;'></path><path id='primary-2' data-name='primary' d='M18,19H8a2,2,0,0,1-2-2V10' style='fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;'></path><polyline id='primary-3' data-name='primary' points='15 11 18 14 21 11' style='fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;'></polyline><polyline id='primary-4' data-name='primary' points='9 13 6 10 3 13' style='fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;'></polyline></g></svg>";
   page+="<a href='/onoff'><svg class='icon' width='50' height='50' fill='none' xmlns='http://www.w3.org/2000/svg'>";
@@ -74,4 +114,45 @@ void handle_main()
   page+="</body>";
   page+="</html>";
 server.send(200, "text/html", page); 
+}
+//включение и вуключение лампы в веб интерфейсе
+void handle_onoff()
+{
+  power_flag =!power_flag;
+  if (power_flag) ledMode=1; else ledMode=0;
+  change_mode(ledMode);
+  server.sendHeader("Location", "/",true);   //редирект на главную
+  server.send(302, "text/plane","");
+}
+
+//смена эффекта в веб интерфейсе
+void handle_effect_change()
+{
+  ledMode = server.arg("val").toInt();
+  change_mode(ledMode);               // меняем режим через change_mode (там для каждого режима стоят цвета и задержки)    
+  changeFlag = true;
+  Serial.println(ledMode);
+  server.sendHeader("Location", "/",true);   //редирект на главную
+  server.send(302, "text/plane","");
+}
+
+//Изменение яркости в веб интерфейсе
+void handle_change_brightness()
+{
+  led_bright = server.arg("val").toInt();
+  LEDS.setBrightness(led_bright);//устанавливаем новую яркость
+  Serial.println(led_bright);
+  server.sendHeader("Location", "/",true);   //редирект на главную
+  server.send(302, "text/plane","");
+}
+
+//Изменение цвета в веб интерфейсе
+void handle_change_color()
+{
+  red_color = server.arg("red").toInt();
+  green_color = server.arg("green").toInt();
+  blue_color = server.arg("blue").toInt();
+  change_mode(1); 
+  server.sendHeader("Location", "/",true);   //редирект на главную
+  server.send(302, "text/plane","");
 }
