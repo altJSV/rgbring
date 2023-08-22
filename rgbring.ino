@@ -136,9 +136,9 @@ void loop() {
     case 13: rule30(); break;                  // безумие красных светодиодов
     case 14: random_march(); break;            // безумие случайных цветов
     case 15: rwb_march(); break;               // белый синий красный бегут по кругу (ПАТРИОТИЗМ!)
-    case 16: radiation(); break;               // пульсирует значок радиации
+    case 16: RunningLights(0xff, 0xff, 0x00, thisdelay); break;                     // бегущие огни
     case 17: color_loop_vardelay(); break;     // красный светодиод бегает по кругу
-    case 18: pop_horizontal(); break;          // красные вспышки спускаются вниз
+    case 18: TwinkleRandom(20, thisdelay, 1); break;                                // случайные разноцветные включения (1 - танцуют все, 0 - случайный 1 диод)
     case 19: quad_bright_curve(); break;       // полумесяц
     case 20: rainbow_vertical(); break;        // радуга в вертикаьной плоскости (кольцо)
     case 21: pacman(); break;                  // пакман
@@ -153,10 +153,7 @@ void loop() {
     case 29: CylonBounce(0xff, 0, 0, 4, 10, thisdelay); break;                      // бегающие светодиоды
     case 30: Fire(55, 120, thisdelay); break;                                       // линейный огонь
     case 31: rainbowCycle(thisdelay); break;                                        // очень плавная вращающаяся радуга
-    case 32: TwinkleRandom(20, thisdelay, 1); break;                                // случайные разноцветные включения (1 - танцуют все, 0 - случайный 1 диод)
-    case 33: RunningLights(0xff, 0xff, 0x00, thisdelay); break;                     // бегущие огни
-    case 34: Sparkle(0xff, 0xff, 0xff, thisdelay); break;                           // случайные вспышки белого цвета
-    case 35: Strobe(0xff, 0xff, 0xff, 10, thisdelay, 1000); break;                  // стробоскоп
+    
   }
 }
 
@@ -180,9 +177,9 @@ void change_mode(int newmode) {
     case 13: thisdelay = 100; break;                    //---CELL AUTO - RULE 30 (RED)
     case 14: thisdelay = 80; break;                     //---MARCH RANDOM COLORS
     case 15: thisdelay = 80; break;                     //---MARCH RWB COLORS
-    case 16: thisdelay = 60; thishue = 95; break;       //---RADIATION SYMBOL
+    case 16: thisdelay = 50; break;                     // RunningLights
     //---PLACEHOLDER FOR COLOR LOOP VAR DELAY VARS
-    case 18: thisdelay = 100; thishue = 0; break;       //---POP LEFT/RIGHT
+    case 18: thisdelay = 10; break;                     // rainbowTwinkle
     case 19: thisdelay = 100; thishue = 180; break;     //---QUADRATIC BRIGHTNESS CURVE
     //---PLACEHOLDER FOR FLAME VARS
     case 20: thisdelay = 50; thisstep = 15; break;      //---VERITCAL RAINBOW
@@ -196,10 +193,8 @@ void change_mode(int newmode) {
     case 29: thisdelay = 50; break;                     // CylonBounce
     case 30: thisdelay = 15; break;                     // Fire
     case 31: thisdelay = 20; break;                     // rainbowCycle
-    case 32: thisdelay = 10; break;                     // rainbowTwinkle
-    case 33: thisdelay = 50; break;                     // RunningLights
-    case 34: thisdelay = 0; break;                      // Sparkle
-    case 35: thisdelay = 100; break;                    // Strobe
+    
+    
 
     case 101: one_color_all(255, 0, 0); LEDS.show(); break; //---ALL RED
     case 102: one_color_all(0, 255, 0); LEDS.show(); break; //---ALL GREEN
@@ -225,7 +220,7 @@ void button_press()
     if (btn1.click())
       {
         ledMode++;
-        if (ledMode>35) ledMode=1; 
+        if (ledMode>31) ledMode=1; 
         change_mode(ledMode);               // меняем режим через change_mode (там для каждого режима стоят цвета и задержки)    
         changeFlag = true;
         Serial.println(ledMode);
@@ -237,9 +232,9 @@ void button_press()
       {
         switch (cur_color)
           {
-            case 0: blue_color+=5;if (red_color<0) red_color=0;Serial.println(red_color); break;
-            case 1: green_color+=5;if (green_color<0) green_color=0;Serial.println(green_color); break;
-            case 2: blue_color+=5;if (blue_color<0) blue_color=0;Serial.println(blue_color); break;
+            case 0: blue_color+=1;if (red_color<0) red_color=0;Serial.println(red_color); break;
+            case 1: green_color+=1;if (green_color<0) green_color=0;Serial.println(green_color); break;
+            case 2: blue_color+=1;if (blue_color<0) blue_color=0;Serial.println(blue_color); break;
           }
         }
        
@@ -307,9 +302,9 @@ void button_press()
         {
         switch (cur_color)
           {
-            case 0: red_color-=5;if (red_color<0) red_color=0;Serial.println(red_color); break;
-            case 1: green_color-=5;if (green_color<0) green_color=0;Serial.println(green_color); break;
-            case 2: blue_color-=5;if (blue_color<0) blue_color=0;Serial.println(blue_color); break;
+            case 0: red_color-=1;if (red_color<0) red_color=0;Serial.println(red_color); break;
+            case 1: green_color-=1;if (green_color<0) green_color=0;Serial.println(green_color); break;
+            case 2: blue_color-=1;if (blue_color<0) blue_color=0;Serial.println(blue_color); break;
           }
         }
       }

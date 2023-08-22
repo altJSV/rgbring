@@ -328,26 +328,6 @@ void rwb_march() {                    //-m15-R,W,B MARCH CCW
   if (safeDelay(thisdelay)) return;
 }
 
-void radiation() {                   //-m16-SORT OF RADIATION SYMBOLISH-
-  int N3  = int(LED_COUNT / 3);
-  int N6  = int(LED_COUNT / 6);
-  int N12 = int(LED_COUNT / 12);
-  for (int i = 0; i < N6; i++ ) {    //-HACKY, I KNOW...
-    tcount = tcount + .02;
-    if (tcount > 3.14) {
-      tcount = 0.0;
-    }
-    ibright = int(sin(tcount) * 255);
-    int j0 = (i + LED_COUNT - N12) % LED_COUNT;
-    int j1 = (j0 + N3) % LED_COUNT;
-    int j2 = (j1 + N3) % LED_COUNT;
-    leds[j0] = CHSV(thishue, thissat, ibright);
-    leds[j1] = CHSV(thishue, thissat, ibright);
-    leds[j2] = CHSV(thishue, thissat, ibright);
-  }
-  LEDS.show();
-  if (safeDelay(thisdelay)) return;
-}
 
 void color_loop_vardelay() {                    //-m17-COLOR LOOP (SINGLE LED) w/ VARIABLE DELAY
   idex++;
@@ -366,33 +346,6 @@ void color_loop_vardelay() {                    //-m17-COLOR LOOP (SINGLE LED) w
   }
   LEDS.show();
   if (safeDelay(t)) return;
-}
-
-
-void pop_horizontal() {        //-m20-POP FROM LEFT TO RIGHT UP THE RING
-  int ix;
-  if (bouncedirection == 0) {
-    bouncedirection = 1;
-    ix = idex;
-  }
-  else if (bouncedirection == 1) {
-    bouncedirection = 0;
-    ix = horizontal_index(idex);
-    idex++;
-    if (idex > TOP_INDEX) {
-      idex = 0;
-    }
-  }
-  for (int i = 0; i < LED_COUNT; i++ ) {
-    if (i == ix) {
-      leds[i] = CHSV(thishue, thissat, 255);
-    }
-    else {
-      leds[i].r = 0; leds[i].g = 0; leds[i].b = 0;
-    }
-  }
-  LEDS.show();
-  if (safeDelay(thisdelay)) return;
 }
 
 void quad_bright_curve() {      //-m21-QUADRATIC BRIGHTNESS CURVER
@@ -803,30 +756,6 @@ void RunningLights(byte red, byte green, byte blue, int WaveDelay) {
     FastLED.show();
     if (safeDelay(WaveDelay)) return;
   }
-}
-
-//-------------------------------Sparkle---------------------------------------
-void Sparkle(byte red, byte green, byte blue, int SpeedDelay) {
-  int Pixel = random(LED_COUNT);
-  setPixel(Pixel, red, green, blue);
-  FastLED.show();
-  if (safeDelay(SpeedDelay)) return;
-  setPixel(Pixel, 0, 0, 0);
-}
-
-
-//-------------------------------Strobe---------------------------------------
-void Strobe(byte red, byte green, byte blue, int StrobeCount, int FlashDelay, int EndPause) {
-  for (int j = 0; j < StrobeCount; j++) {
-    setAll(red, green, blue);
-    FastLED.show();
-    if (safeDelay(FlashDelay)) return;
-    setAll(0, 0, 0);
-    FastLED.show();
-    if (safeDelay(FlashDelay)) return;
-  }
-
-  if (safeDelay(EndPause)) return;
 }
 
 
