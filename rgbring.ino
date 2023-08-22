@@ -8,8 +8,10 @@
 #define LED_DT D3             // пин, куда подключен DIN ленты
 
 //Учетные данные wifi
-const char* ssid = "Keenetic-8995";
-const char* password = "S1e9r8g5ey";
+const char* ssid = "ssid";
+const char* password = "pass";
+const char* APssid = "RGBRing";
+const char* APpass = "12345678";
 
 ESP8266WebServer server(80); //поднимаем веб сервер на 80 порту
 
@@ -77,14 +79,19 @@ void setup()
   
   Serial.begin(115200);              // открыть порт для связи
   //подключаемся к wifi и поднимаем сервер обновлений
-   WiFi.mode(WIFI_STA);
+   WiFi.mode(WIFI_AP_STA);
+  //создаем точку доступа
+  WiFi.softAP(APssid, APpass);
+  
   WiFi.begin(ssid, password);
+  
   Serial.println("");
-
+  byte tries=10;
   // Wait for connection
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED && tries>0) {
     delay(500);
     Serial.print(".");
+    tries--;
   }
   Serial.println("");
   Serial.print("Connected to ");
@@ -96,7 +103,7 @@ void setup()
   server.on("/onoff",handle_onoff);
   server.on("/change_effect",handle_effect_change);
   server.on("/change_brightness",handle_change_brightness);
-  server.on("/change_color",handle_change_brightness);
+  server.on("/change_color",handle_change_color);
 
   ElegantOTA.begin(&server);    // Стартуем AsyncElegantOTA
   server.begin();

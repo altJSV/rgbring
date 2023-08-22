@@ -93,7 +93,7 @@ void handle_main()
   page+="<p>Установите с помощью слайдера яркость светодиодов</p>";
   page+="<input id='bright' type='range' class='slider' min='0' max='255' step='1' width='100%' align='center' value='"+String(led_bright)+"'  onchange='change_brightness()'>";
   page+="</div></div>";
-  /* пока данный код глючит. Оставим до будущих релизов
+  /* пока данный код глючит. Оставим до будущих релизов*/
   page+="<div class='headerblock'>";
   page+="<h2>Настройка цветовой палитры для режима одного цвета</h2>";
   page+="<div class='main'>";
@@ -105,7 +105,7 @@ void handle_main()
   page+="<p><font color='blue'>Интенсивность синего цвета</font>";
   page+="<input id='bluesl' type='range' class='slider' min='0' max='255' step='1' width='100%' align='center' value='"+String(blue_color)+"' onchange='change_color()'></p>";
   page+="</div></div>";
-  */
+  
   page+="<div class='icon-block'><a href='/update'><svg class='icon' width='50' height='50' fill='none' xmlns='http://www.w3.org/2000/svg'>";
   page+="<g id='SVGRepo_bgCarrier' stroke-width='0'></g><g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></g><g id='SVGRepo_iconCarrier'><path id='primary' d='M6,5H16a2,2,0,0,1,2,2v7' style='fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;'></path><path id='primary-2' data-name='primary' d='M18,19H8a2,2,0,0,1-2-2V10' style='fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;'></path><polyline id='primary-3' data-name='primary' points='15 11 18 14 21 11' style='fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;'></polyline><polyline id='primary-4' data-name='primary' points='9 13 6 10 3 13' style='fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;'></polyline></g></svg>";
   page+="<a href='/onoff'><svg class='icon' width='50' height='50' fill='none' xmlns='http://www.w3.org/2000/svg'>";
