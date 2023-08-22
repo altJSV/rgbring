@@ -53,7 +53,7 @@ void handle_main()
   page+="<div class='headerblock'>";
   page+="<h2>Выбор эффекта</h2>";
   page+="<div class='main'>";
-  page+="<p>Выберите эффект подсветки из выпадающего списка</p>";
+  page+="<p>&nbsp;Выберите эффект подсветки из выпадающего списка</p>";
   page+="<select  class= 'select-css' name='efnum' id='efnum' width='80%' align='center' onchange='change_effect()'>";
   page+="<option value='1'>Выбор одного цвета</option>";
   page+="<option value='2'>Плавная смена цветов всей ленты</option>";
@@ -87,25 +87,36 @@ void handle_main()
   page+="<option value='31'>Очень плавная вращающаяся радуга</option>";
   page+="</select>";
   page+="</div></div>";
+  
   page+="<div class='headerblock'>";
   page+="<h2>Настройка яркости</h2>";
   page+="<div class='main'>";
-  page+="<p>Установите с помощью слайдера яркость светодиодов</p>";
+  page+="<p>&nbsp;Установите с помощью слайдера яркость светодиодов</p>";
   page+="<input id='bright' type='range' class='slider' min='0' max='255' step='1' width='100%' align='center' value='"+String(led_bright)+"'  onchange='change_brightness()'>";
   page+="</div></div>";
-  /* пока данный код глючит. Оставим до будущих релизов*/
+  
   page+="<div class='headerblock'>";
   page+="<h2>Настройка цветовой палитры для режима одного цвета</h2>";
   page+="<div class='main'>";
-  page+="<p>Для режима одного цвета установите значение каждого из цветов</p>";
-  page+="<p><font color='red'>Интенсивность красного цвета</font>";
+  page+="<p>&nbsp;Для режима одного цвета установите значение каждого из цветов</p>";
+  page+="<p>&nbsp;<font color='red'>Интенсивность красного цвета</font>";
   page+="<input id='redsl' type='range' class='slider' min='0' max='255' step='1' width='100%' align='center' value='"+String(red_color)+"' onchange='change_color()'></p>";
-  page+="<p><font color='green'>Интенсивность зеленого цвета</font>";
+  page+="<p>&nbsp;<font color='green'>Интенсивность зеленого цвета</font>";
   page+="<input id='greensl' type='range' class='slider' min='0' max='255' step='1' width='100%' align='center' value='"+String(green_color)+"' onchange='change_color()'></p>";
-  page+="<p><font color='blue'>Интенсивность синего цвета</font>";
+  page+="<p>&nbsp;<font color='blue'>Интенсивность синего цвета</font>";
   page+="<input id='bluesl' type='range' class='slider' min='0' max='255' step='1' width='100%' align='center' value='"+String(blue_color)+"' onchange='change_color()'></p>";
   page+="</div></div>";
-  
+
+  page+="<div class='headerblock'>";
+  page+="<h2>Учетные данные WiFi</h2>";
+  page+="<div class='main'>";
+  page+="<p><form action='/scan' method='POST'>&nbsp;<input type='submit' class='btn' style='padding:10px;border-radius:10px; background: 	Dodgerblue; color: white'  value='Поиск сетей WiFi'></form></p>";
+  page+=st;
+  page+="<p>&nbsp;Ручной ввод учетных данных</p>";
+  page+="<p><form method='get' action='/setting'><label>SSID: </label><input style='padding:10px;border-radius:10px; 15px' type='text' name='ssid'  length=32>&nbsp;";
+  page+="<label>Пароль: </label><input style='padding:10px;border-radius:10px;' name='pass' type='password' length=64>&nbsp;&nbsp;<input style='padding:10px;border-radius:10px; background: 	Dodgerblue; color: white'  type='submit'></form></p>";
+  page+="</div></div>";
+
   page+="<div class='icon-block'><a href='/update'><svg class='icon' width='50' height='50' fill='none' xmlns='http://www.w3.org/2000/svg'>";
   page+="<g id='SVGRepo_bgCarrier' stroke-width='0'></g><g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></g><g id='SVGRepo_iconCarrier'><path id='primary' d='M6,5H16a2,2,0,0,1,2,2v7' style='fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;'></path><path id='primary-2' data-name='primary' d='M18,19H8a2,2,0,0,1-2-2V10' style='fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;'></path><polyline id='primary-3' data-name='primary' points='15 11 18 14 21 11' style='fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;'></polyline><polyline id='primary-4' data-name='primary' points='9 13 6 10 3 13' style='fill: none; stroke: #000000; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;'></polyline></g></svg>";
   page+="<a href='/onoff'><svg class='icon' width='50' height='50' fill='none' xmlns='http://www.w3.org/2000/svg'>";
@@ -155,4 +166,74 @@ void handle_change_color()
   change_mode(1); 
   server.sendHeader("Location", "/",true);   //редирект на главную
   server.send(302, "text/plane","");
+}
+
+void handle_setting()
+{
+  String qsid = server.arg("ssid");
+  String qpass = server.arg("pass");
+  String page;
+  int statusCode;
+  if (eeprom_write(qsid,qpass))
+    {
+      page="{'Успешно':'сохранено в EEPROM. Перезагружаемся для подключения к точке доступа'}";
+      statusCode = 200;
+      ESP.reset();
+    }
+    else
+    {
+    page = "{'Ошибка':'404 не найдено'}";
+        statusCode = 404;
+        Serial.println("Sending 404");
+        server.sendHeader("Access-Control-Allow-Origin", "*");
+      server.send(statusCode, "application/json", page);
+    }
+}
+
+void handle_scan()
+{
+  scan_networks();
+  server.sendHeader("Location", "/",true);   //редирект на главную
+  server.send(302, "text/plane","");
+}
+
+String scan_networks()
+{
+  int n = WiFi.scanNetworks();
+  Serial.println("scan done");
+  if (n == 0)
+    Serial.println("no networks found");
+  else
+  {
+    Serial.print(n);
+    Serial.println(" networks found");
+    for (int i = 0; i < n; ++i)
+    {
+      // Print SSID and RSSI for each network found
+      Serial.print(i + 1);
+      Serial.print(": ");
+      Serial.print(WiFi.SSID(i));
+      Serial.print(" (");
+      Serial.print(WiFi.RSSI(i));
+      Serial.print(")");
+      Serial.println((WiFi.encryptionType(i) == ENC_TYPE_NONE) ? " " : "*");
+      delay(10);
+    }
+  }
+  Serial.println("");
+  st = "<p><ul>";
+  for (int i = 0; i < n; ++i)
+  {
+    // Print SSID and RSSI for each network found
+    st += "<li>";
+    st += WiFi.SSID(i);
+    st += " (";
+    st += WiFi.RSSI(i);
+ 
+    st += ")";
+    st += (WiFi.encryptionType(i) == ENC_TYPE_NONE) ? " " : "*";
+    st += "</li>";
+  }
+  st += "</ul></p>";
+  return st;
 }

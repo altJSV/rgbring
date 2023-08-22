@@ -4,15 +4,17 @@
 #include <ElegantOTA.h> //OTA Обновления
 #include "FastLED.h"          // библиотека для работы с лентой
 #include <EncButton2.h> //библиотека управления кнопками
+#include <EEPROM.h>
+
 #define LED_COUNT 85          // число светодиодов в кольце/ленте
 #define LED_DT D3             // пин, куда подключен DIN ленты
 
 //Учетные данные wifi
-const char* ssid = "ssid";
-const char* password = "pass";
+String ssid = "ssid";
+String password = "pass";
 const char* APssid = "RGBRing";
 const char* APpass = "12345678";
-
+String st;//здесь будем хранить найденные wifi сети
 ESP8266WebServer server(80); //поднимаем веб сервер на 80 порту
 
 //Подключаем кнопки
@@ -78,12 +80,15 @@ void setup()
 {
   
   Serial.begin(115200);              // открыть порт для связи
+  //Инициализируем EEPROM
+  EEPROM.begin(512); //инициализация
+  //читаем параметры из eeprom
   //подключаемся к wifi и поднимаем сервер обновлений
    WiFi.mode(WIFI_AP_STA);
   //создаем точку доступа
   WiFi.softAP(APssid, APpass);
   
-  WiFi.begin(ssid, password);
+  WiFi.begin(ssid.c_str(), password.c_str());
   
   Serial.println("");
   byte tries=10;
@@ -104,6 +109,8 @@ void setup()
   server.on("/change_effect",handle_effect_change);
   server.on("/change_brightness",handle_change_brightness);
   server.on("/change_color",handle_change_color);
+  server.on("/setting",handle_setting);
+  server.on("/scan",handle_scan);
 
   ElegantOTA.begin(&server);    // Стартуем AsyncElegantOTA
   server.begin();
