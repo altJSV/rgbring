@@ -20,6 +20,7 @@ void handle_main()
   page+=".slider::-moz-range-thumb {width: 25px; height: 25px; background: Dodgerblue; cursor: pointer;}";  
   page+=".icon{fill: #000000;}";
   page+="</style>";
+
   page+="<script type='text/javascript'>";
   page+="function change_effect(){";
   page+="const select = document.getElementById('efnum');";
@@ -28,13 +29,23 @@ void handle_main()
   page+="request = new XMLHttpRequest();";
   page+="request.open('GET',server, true);";
   page+="request.send();}";
+
   page+="function change_brightness(){";
   page+="const bright = document.getElementById('bright');";
   page+="var valbright=bright.value;";
   page+="var server = '/change_brightness?val='+valbright;";
   page+="request = new XMLHttpRequest();";
   page+="request.open('GET',server, true);";
+  page+="request.send();}";
+
+  page+="function change_speed(){";
+  page+="const speedrange = document.getElementById('speed');";
+  page+="var valspeed=speedrange.value *(-1);";
+  page+="var server = '/change_speed?val='+valspeed;";
+  page+="request = new XMLHttpRequest();";
+  page+="request.open('GET',server, true);";
   page+="request.send();}";  
+
   page+="function change_color(){";
   page+="const redc = document.getElementById('redsl');";
   page+="const greenc = document.getElementById('greensl');";
@@ -48,6 +59,7 @@ void handle_main()
   page+="request.send();}";  
   page+="</script>";
   page+="</head>";
+
   page+="<body>";
   page+="<h1 align='center'>Панель управления RGB кольцом</h1>";
   page+="<div class='headerblock'>";
@@ -93,6 +105,13 @@ void handle_main()
   page+="<div class='main'>";
   page+="<p>&nbsp;Установите с помощью слайдера яркость светодиодов</p>";
   page+="<input id='bright' type='range' class='slider' min='0' max='255' step='1' width='100%' align='center' value='"+String(led_bright)+"'  onchange='change_brightness()'>";
+  page+="</div></div>";
+
+  page+="<div class='headerblock'>";
+  page+="<h2>Настройка скорости эффекта</h2>";
+  page+="<div class='main'>";
+  page+="<p>&nbsp;Установите с помощью слайдера скорость эффекта</p>";
+  page+="<input id='speed' type='range' class='slider' min='-150' max='-1' step='1' width='100%' align='center' value='"+String(thisstep)+"'  onchange='change_speed()'>";
   page+="</div></div>";
   
   page+="<div class='headerblock'>";
@@ -153,6 +172,15 @@ void handle_change_brightness()
   led_bright = server.arg("val").toInt();
   LEDS.setBrightness(led_bright);//устанавливаем новую яркость
   Serial.println(led_bright);
+  server.sendHeader("Location", "/",true);   //редирект на главную
+  server.send(302, "text/plane","");
+}
+
+//Изменение яркости в веб интерфейсе
+void handle_change_speed()
+{
+  thisdelay = server.arg("val").toInt();
+  Serial.println(thisdelay);
   server.sendHeader("Location", "/",true);   //редирект на главную
   server.send(302, "text/plane","");
 }

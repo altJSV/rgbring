@@ -109,6 +109,7 @@ void setup()
   server.on("/onoff",handle_onoff);
   server.on("/change_effect",handle_effect_change);
   server.on("/change_brightness",handle_change_brightness);
+  server.on("/change_speed",handle_change_speed);
   server.on("/change_color",handle_change_color);
   server.on("/setting",handle_setting);
   server.on("/scan",handle_scan);
@@ -263,7 +264,7 @@ void button_press()
     {
     
     //Кнопка вверх удержание увеличиваем яркость
-    if (btn1.hold())
+    if (btn1.hold(0))
       {
         led_bright+=5; //добавляем к значению яркости 5
         if (led_bright>255) //проверяем на выход из диапазона
@@ -273,6 +274,8 @@ void button_press()
         Serial.println(led_bright);    
         LEDS.setBrightness(led_bright);//устанавливаем новую яркость
       }
+
+      
     }  
     }
 
@@ -341,6 +344,7 @@ void button_press()
         Serial.println(led_bright);
         LEDS.setBrightness(led_bright);//устанавливаем новую яркость
       }
+     
     }
     }
   }
