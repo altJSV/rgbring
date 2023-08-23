@@ -44,7 +44,15 @@ void handle_main()
   page+="var server = '/change_speed?val='+valspeed;";
   page+="request = new XMLHttpRequest();";
   page+="request.open('GET',server, true);";
-  page+="request.send();}";  
+  page+="request.send();}";
+
+  page+="function change_hue(){";
+  page+="const huerange = document.getElementById('hue');";
+  page+="var valhue=huerange.value;";
+  page+="var server = '/change_hue?val='+valhue;";
+  page+="request = new XMLHttpRequest();";
+  page+="request.open('GET',server, true);";
+  page+="request.send();}";    
 
   page+="function change_color(){";
   page+="const redc = document.getElementById('redsl');";
@@ -70,7 +78,7 @@ void handle_main()
   page+="<option value='1'>Выбор одного цвета</option>";
   page+="<option value='2'>Плавная смена цветов всей ленты</option>";
   page+="<option value='3'>Крутящаяся радуга</option>";
-  page+="<option value='4'>случайная смена цветов</option>";
+  page+="<option value='4'>Случайная смена цветов</option>";
   page+="<option value='5'>Бегающий светодиод</option>";
   page+="<option value='6'>Бегающий паровозик светодиодов</option>";
   page+="<option value='7'>Вращаются красный и синий</option>";
@@ -112,6 +120,13 @@ void handle_main()
   page+="<div class='main'>";
   page+="<p>&nbsp;Установите с помощью слайдера скорость эффекта</p>";
   page+="<input id='speed' type='range' class='slider' min='-150' max='-1' step='1' width='100%' align='center' value='"+String(thisstep)+"'  onchange='change_speed()'>";
+  page+="</div></div>";
+
+  page+="<div class='headerblock'>";
+  page+="<h2>Настройка цветового оттенка для некоторых эффектов</h2>";
+  page+="<div class='main'>";
+  page+="<p>&nbsp;Установите с помощью слайдера цветовой оттенок</p>";
+  page+="<input id='hue' type='range' class='slider' min='0' max='255' step='1' width='100%' align='center' value='"+String(thishue)+"'  onchange='change_hue()'>";
   page+="</div></div>";
   
   page+="<div class='headerblock'>";
@@ -176,11 +191,20 @@ void handle_change_brightness()
   server.send(302, "text/plane","");
 }
 
-//Изменение яркости в веб интерфейсе
+//Изменение скорости эффекта в веб интерфейсе
 void handle_change_speed()
 {
   thisdelay = server.arg("val").toInt();
   Serial.println(thisdelay);
+  server.sendHeader("Location", "/",true);   //редирект на главную
+  server.send(302, "text/plane","");
+}
+
+//Изменение цветового оттенка эффекта в веб интерфейсе
+void handle_change_hue()
+{
+  thishue = server.arg("val").toInt();
+  Serial.println(thishue);
   server.sendHeader("Location", "/",true);   //редирект на главную
   server.send(302, "text/plane","");
 }

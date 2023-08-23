@@ -110,6 +110,7 @@ void setup()
   server.on("/change_effect",handle_effect_change);
   server.on("/change_brightness",handle_change_brightness);
   server.on("/change_speed",handle_change_speed);
+  server.on("/change_hue",handle_change_hue);
   server.on("/change_color",handle_change_color);
   server.on("/setting",handle_setting);
   server.on("/scan",handle_scan);
@@ -170,9 +171,8 @@ void loop() {
     case 27: new_rainbow_loop(); break;        // крутая плавная вращающаяся радуга
     case 28: colorWipe(0x00, 0xff, 0x00, thisdelay);
       colorWipe(0x00, 0x00, 0x00, thisdelay); break;                                // плавное заполнение цветом
-    case 29: CylonBounce(0xff, 0, 0, 4, 10, thisdelay); break;                      // бегающие светодиоды
-    case 30: Fire(55, 120, thisdelay); break;                                       // линейный огонь
-    case 31: rainbowCycle(thisdelay); break;                                        // очень плавная вращающаяся радуга
+    case 29: Fire(55, 120, thisdelay); break;                                       // линейный огонь
+   
     
   }
 }
@@ -210,10 +210,8 @@ void change_mode(int newmode) {
     case 26: thisdelay = 100; thishue = 95; break;       //---MATRIX RAIN
     case 27: thisdelay = 15; break;                      //---NEW RAINBOW LOOP
     case 28: thisdelay = 50; break;                     // colorWipe
-    case 29: thisdelay = 50; break;                     // CylonBounce
-    case 30: thisdelay = 15; break;                     // Fire
-    case 31: thisdelay = 20; break;                     // rainbowCycle
-    
+    case 29: thisdelay = 15; break;                     // Fire
+        
     
 
     case 101: one_color_all(255, 0, 0); LEDS.show(); break; //---ALL RED
