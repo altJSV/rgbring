@@ -169,9 +169,7 @@ void loop() {
     case 25: rgb_propeller(); break;           // RGB пропеллер
     case 26: matrix(); break;                  // зелёненькие бегают по кругу случайно
     case 27: new_rainbow_loop(); break;        // крутая плавная вращающаяся радуга
-    case 28: colorWipe(0x00, 0xff, 0x00, thisdelay);
-      colorWipe(0x00, 0x00, 0x00, thisdelay); break;                                // плавное заполнение цветом
-    case 29: Fire(55, 120, thisdelay); break;                                       // линейный огонь
+    case 28: Fire(55, 120, thisdelay); break;                                       // линейный огонь
    
     
   }
@@ -209,8 +207,7 @@ void change_mode(int newmode) {
     case 25: thisdelay = 100; thishue = 0; break;        //---RGB PROPELLER
     case 26: thisdelay = 100; thishue = 95; break;       //---MATRIX RAIN
     case 27: thisdelay = 15; break;                      //---NEW RAINBOW LOOP
-    case 28: thisdelay = 50; break;                     // colorWipe
-    case 29: thisdelay = 15; break;                     // Fire
+    case 28: thisdelay = 15; break;                     // Fire
         
     
 
@@ -238,7 +235,7 @@ void button_press()
     if (btn1.click())
       {
         ledMode++;
-        if (ledMode>29) ledMode=1; 
+        if (ledMode>28) ledMode=1; 
         change_mode(ledMode);               // меняем режим через change_mode (там для каждого режима стоят цвета и задержки)    
         changeFlag = true;
         Serial.println(ledMode);
@@ -311,7 +308,7 @@ void button_press()
     if (btn3.click())
       {
         ledMode--;
-        if (ledMode<1) ledMode=29; 
+        if (ledMode<1) ledMode=28; 
         change_mode(ledMode);               // меняем режим через change_mode (там для каждого режима стоят цвета и задержки)    
         changeFlag = true;
         Serial.println(ledMode);

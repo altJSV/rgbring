@@ -101,8 +101,7 @@ void handle_main()
   page+="<option value='25'>RGB пропеллер</option>";
   page+="<option value='26'>Зелёненькие бегают по кругу случайно</option>";
   page+="<option value='27'>Крутая плавная вращающаяся радуга</option>";
-  page+="<option value='28'>Плавное заполнение цветом</option>";
-  page+="<option value='30'>Линейный огонь</option>";
+  page+="<option value='28'>Линейный огонь</option>";
   page+="</select>";
   page+="</div></div>";
   
