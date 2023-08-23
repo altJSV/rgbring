@@ -238,7 +238,7 @@ void button_press()
     if (btn1.click())
       {
         ledMode++;
-        if (ledMode>31) ledMode=1; 
+        if (ledMode>29) ledMode=1; 
         change_mode(ledMode);               // меняем режим через change_mode (там для каждого режима стоят цвета и задержки)    
         changeFlag = true;
         Serial.println(ledMode);
@@ -262,7 +262,7 @@ void button_press()
     {
     
     //Кнопка вверх удержание увеличиваем яркость
-    if (btn1.hold(0))
+    if (btn1.hold())
       {
         led_bright+=5; //добавляем к значению яркости 5
         if (led_bright>255) //проверяем на выход из диапазона
@@ -311,7 +311,7 @@ void button_press()
     if (btn3.click())
       {
         ledMode--;
-        if (ledMode<1) ledMode=35; 
+        if (ledMode<1) ledMode=29; 
         change_mode(ledMode);               // меняем режим через change_mode (там для каждого режима стоят цвета и задержки)    
         changeFlag = true;
         Serial.println(ledMode);
